@@ -1,13 +1,9 @@
 # CRUD_app
 Basic CRUD application.
 
-Prequesite:
-Mysql community server. Download link below
-https://dev.mysql.com/downloads/mysql/
-
 #team promise: Task 1
-Create a basic CRUD application where 
-1) you create a user and store their details in an SQL database (mySQL is a good fit)
-2) access that users details
-3) record the time the user accessed their data in the database 
-4) delete that user from your database
+A basic CRUD application, where we can perform the following operations:
+        1) Create User
+        2) Access User(last accessed time of the record)
+        3) Modify User
+        4) Delete User
