@@ -1,11 +1,14 @@
 import mysql.connector
 from datetime import datetime
-  
+
+#u see my terminal?
+
+
 mysqldb = mysql.connector.connect(
   host ="localhost",
   user ="root",
   passwd ="",
-  database = "gfg"
+  database = "fnb_crud"
 )
 
 mycursordb = mysqldb.cursor()
