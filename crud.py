@@ -1,6 +1,5 @@
 import mysql.connector
 import re
-from pprint import pprint as pp
 from datetime import datetime
 
 
@@ -58,7 +57,7 @@ def get_user_name():
 def get_user_email():
     while True:
         email = input("\nEnter user email: ")
-        if re.match(r"^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$", email)is None:
+        if re.match(r"^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$", email) is None:
             print(" Invalid email ".center(30, "-"))
             print(" Please enter a valid email eg - abc@abc.xyz ".center(35, "*"))
         else:
@@ -178,7 +177,7 @@ def modify_user():
 
         elif choice == 2:
             email = get_user_email()
-            modify_user_data(user_id, "email", email)
+            modify_user_data(user['id'], "email", email)
             print(f" Changed {user['email']} to {email}\n")
             break
 
@@ -186,7 +185,7 @@ def modify_user():
 
         elif choice == 3:
             age = get_user_age()
-            modify_user_data(user_id, "age", age)
+            modify_user_data(user['id'], "age", age)
             print(f" Changed {user['age']} to {age}\n")
             break
 
