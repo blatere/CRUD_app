@@ -1,17 +1,19 @@
-import mysql.connector
+""" This program illustrates basic CRUD operations using mySQL"""
+
 import re
 from datetime import datetime
+import mysql.connector
 
 
-mydb = mysql.connector.connect(
-    host = "localhost",
-    user = "root",
-    password = "",
-    database = "fnb_crud"
+MYDB = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="",
+    database="fnb_crud"
 )
 
-mycursor = mydb.cursor()
-mycursor.execute("""CREATE TABLE IF NOT EXISTS users (
+MYCURSOR = MYDB.cursor()
+MYCURSOR.execute("""CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255),
@@ -21,6 +23,7 @@ mycursor.execute("""CREATE TABLE IF NOT EXISTS users (
 
 
 def get_user_id():
+    """function that gets user ID, and returns user data dictionary"""
     while True:
         try:
             user_id = int(input("\nEnter User ID: "))
@@ -28,8 +31,8 @@ def get_user_id():
             print(" Invalid ID type ".center(30, "-"))
         else:
             # break
-            mycursor.execute(f"SELECT * FROM users WHERE id = {user_id}")
-            myresult = mycursor.fetchone()
+            MYCURSOR.execute(f"SELECT * FROM users WHERE id = {user_id}")
+            myresult = MYCURSOR.fetchone()
             if myresult is None:
                 print(f" User ID {user_id} Not Found ".center(30, "*"))
             else:
@@ -46,15 +49,17 @@ def get_user_id():
     }
 
     return user
-    
+
 
 
 def get_user_name():
+    """function that gets user name"""
     name = input("\nEnter user name: ")
     return name
 
 
 def get_user_email():
+    """function that gets user email"""
     while True:
         email = input("\nEnter user email: ")
         if re.match(r"^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$", email) is None:
@@ -67,17 +72,18 @@ def get_user_email():
 
 
 def get_user_age():
+    """function that gets user age"""
     while True:
         try:
             age = input("\nEnter user\'s age: ")
             if re.match(r"^[0-9]{1,3}$", age) is None:
                 raise ValueError
-                
+
         except ValueError:
             print(" Invalid age ".center(30, "-"))
             print(" Please enter a valid age eg - 19 ".center(35, "*"))
 
-            
+
         else:
             break
 
@@ -86,23 +92,24 @@ def get_user_age():
 
 
 def modify_user_data(user_id, column, value):
-    if type(value) == int:
-        mycursor.execute(f"UPDATE users SET {column} = {value} WHERE id = {user_id}")
+    """function that modifies user data in DB"""
+    if isinstance(value, int):
+        MYCURSOR.execute(f"UPDATE users SET {column} = {value} WHERE id = {user_id}")
     else:
-        mycursor.execute(f"UPDATE users SET {column} = '{value}' WHERE id = {user_id}")
-    mydb.commit()
+        MYCURSOR.execute(f"UPDATE users SET {column} = '{value}' WHERE id = {user_id}")
+    MYDB.commit()
     print(f" Successfully updated User ID: {user_id}\'s {column}")
-    print(f" {mycursor.rowcount} record(s) affected".center(30, "-"))
+    print(f" {MYCURSOR.rowcount} record(s) affected".center(30, "-"))
 
 
 
 
 def get_user_details():
+    """function that gets all user details"""
     name = get_user_name()
     email = get_user_email()
     age = get_user_age()
-    
-    
+
     access_time = None
     # print(name, email, age, access_time)
     user = {
@@ -114,25 +121,25 @@ def get_user_details():
 
     return user
 
-def close_conns(mycursor, mydb):
-    mycursor.close()
-    mydb.close()
 
 
 
 #create
 def create_user(user):
+    """ function to create a user """
     print(" Creating user ".center(30, "-"))
-    mycursor.execute(f"INSERT INTO users (name, email, age) VALUES ('{user['name']}', '{user['email']}', {user['age']})")
-    mydb.commit()
+    MYCURSOR.execute(f"INSERT INTO users (name, email, age) VALUES \
+    ('{user['name']}', '{user['email']}', {user['age']})")
+    MYDB.commit()
     print(" Created user successfully ".center(30, "-"))
-    print(f" {mycursor.rowcount} record added ".center(30, "-"))
-    user_id = mycursor.lastrowid
+    print(f" {MYCURSOR.rowcount} record added ".center(30, "-"))
+    user_id = MYCURSOR.lastrowid
     print(f" User ID: {user_id}, keep safely, as it\'s needed to access user".center(30, "-"))
 
 
 #read
 def access_user():
+    """function to read a user"""
     # date_format = "%d %b %Y, %I:%M:%S%p"
     date_format = "%d %m %Y, %H:%M:%S"
     user = get_user_id()
@@ -148,16 +155,13 @@ def access_user():
     Email: {user['email']}
     Age:   {user['age']}
     last access time: {access_time}""".center(30, " "))
-    
 
-    # mycursor.execute(f"UPDATE users SET access_time = '{access_time}' WHERE id = {user_id}")
-    # mydb.commit()
-    # print(mycursor.rowcount, "record(s) affected".center(30, "-"))
     modify_user_data(user['id'], "access_time", access_time)
 
-    
+
 #update
 def modify_user():
+    """function to update a user"""
     user = get_user_id()
     # (user_id, old_name, old_email, old_age, last_access) = myresult
     while True:
@@ -175,29 +179,29 @@ def modify_user():
             print(f" Changed {user['name']} to {name}\n")
             break
 
-        elif choice == 2:
+        if choice == 2:
             email = get_user_email()
             modify_user_data(user['id'], "email", email)
             print(f" Changed {user['email']} to {email}\n")
             break
 
-            
 
-        elif choice == 3:
+
+        if choice == 3:
             age = get_user_age()
             modify_user_data(user['id'], "age", age)
             print(f" Changed {user['age']} to {age}\n")
             break
 
-        elif choice == 4:
+        if choice == 4:
             break
 
-        else: 
-            print(" Invalid Operation ".center(30, "-"))
+        print(" Invalid Operation ".center(30, "-"))
 
-    
+
 #delete
 def remove_user():
+    """function to delete a user"""
     user = get_user_id()
     while True:
         confirm = int(input(f"""
@@ -207,10 +211,10 @@ def remove_user():
         Input: """))
 
         if confirm == 1:
-            mycursor.execute(f"DELETE FROM users WHERE id = {user['id']}")
-            mydb.commit()
+            MYCURSOR.execute(f"DELETE FROM users WHERE id = {user['id']}")
+            MYDB.commit()
             print(f" Successfully deleted User ID: {user['id']}")
-            print(f" {mycursor.rowcount} record(s) affected ".center(30, "-"))
+            print(f" {MYCURSOR.rowcount} record(s) affected ".center(30, "-"))
             break
 
 
@@ -218,11 +222,11 @@ def remove_user():
         if confirm == 2:
             break
 
-        else: 
-            print(" Invalid operation ".center(30, "-"))
+        print(" Invalid operation ".center(30, "-"))
 
-        
+
 def main():
+    """entry point - main"""
     while True:
 
         operation = int(input("""
@@ -248,7 +252,8 @@ def main():
             remove_user()
 
         elif operation == 5:
-            close_conns(mycursor, mydb)
+            MYCURSOR.close()
+            MYDB.close()
             print("")
             print(" Exiting ".center(30, "-"))
             break
@@ -258,8 +263,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
-
-
-
-
