@@ -1,5 +1,4 @@
-# CRUD APP
-Basic software application that consists of four main operations; *Create, Read, Updtate, & Delete*
+Basic python program that consists of four main operations; *Create, Read, Updtate, & Delete*
 
 ## Installation
 * MySQL server
